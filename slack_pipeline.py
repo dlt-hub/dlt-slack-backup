@@ -70,7 +70,7 @@ if __name__ == "__main__":
     # Add your desired resources to the list...
     # resources = ["access_logs", "conversations", "conversations_history"]
 
-    load_all_resources(start_date=datetime(2023, 9, 1))
+    load_all_resources(start_date=datetime(2000, 1, 1))
     # select_resource(selected_channels=["dlt-github-ci"])
 
     # select_resource(selected_channels=["1-announcements"])
