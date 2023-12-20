@@ -151,14 +151,22 @@ def slack_source(
     for channel in fetch_channels:
         channel_name = channel["name"]
         table_name = partial(table_name_func, channel_name)
-        messages_resource = get_messages_resource()
-        # yield dlt.resource(
-        #     get_messages_resource,
-        #     name=channel_name,
-        #     table_name=table_name,
-        #     primary_key=("channel", "ts"),
-        #     write_disposition="append",
-        # )(channel)
+        # messages_resource = get_messages_resource(channel)
+        # print(messages_resource)
+        # for message in next(messages_resource):
+        #     print(message)
+        #     if message["thread_ts"]:
+        #         thread_replies = (get_replies_resource(channel, message["thread_ts"]))
+        #         print(next(thread_replies))
+        #         asdf
+                
+        yield dlt.resource(
+            get_messages_resource,
+            name=channel_name,
+            table_name=table_name,
+            primary_key=("channel", "ts"),
+            write_disposition="append",
+        )(channel)
 
     # It will not work in the pipeline or tests because it is a paid feature, it raises a
     # raise an error when it is not a paying account.
