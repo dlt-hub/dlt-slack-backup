@@ -3,6 +3,9 @@ name: Run slack pipeline from slack_pipeline.py
   schedule:
   - cron: 0 13 * * 1
   workflow_dispatch: null
+  push:
+    branches:
+      - main
 env:
   RUNTIME__DLTHUB_DSN: ${{ secrets.RUNTIME__DLTHUB_DSN }}
   SOURCES__SLACK__ACCESS_TOKEN: ${{ secrets.SOURCES__SLACK__ACCESS_TOKEN }}
