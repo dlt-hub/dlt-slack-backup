@@ -5,6 +5,7 @@ name: Run slack pipeline from slack_pipeline.py
   workflow_dispatch: null
 env:
   RUNTIME__DLTHUB_DSN: ${{ secrets.RUNTIME__DLTHUB_DSN }} }}
+  SOURCES__SLACK__ACCESS_TOKEN: ${{ secrets.SOURCES__SLACK__ACCESS_TOKEN }} }}
 jobs:
   maybe_skip:
     runs-on: ubuntu-latest
