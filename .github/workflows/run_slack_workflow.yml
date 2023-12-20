@@ -4,8 +4,8 @@ name: Run slack pipeline from slack_pipeline.py
   - cron: 0 13 * * 1
   workflow_dispatch: null
 env:
-  RUNTIME__DLTHUB_DSN: ${{ secrets.RUNTIME__DLTHUB_DSN }} }}
-  SOURCES__SLACK__ACCESS_TOKEN: ${{ secrets.SOURCES__SLACK__ACCESS_TOKEN }} }}
+  RUNTIME__DLTHUB_DSN: ${{ secrets.RUNTIME__DLTHUB_DSN }}
+  SOURCES__SLACK__ACCESS_TOKEN: ${{ secrets.SOURCES__SLACK__ACCESS_TOKEN }}
 jobs:
   maybe_skip:
     runs-on: ubuntu-latest
