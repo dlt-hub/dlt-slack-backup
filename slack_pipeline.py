@@ -11,7 +11,7 @@ def load_all_resources(start_date) -> None:
     """Load all resources from slack without any selection of channels."""
 
     pipeline = dlt.pipeline(
-        pipeline_name="slack", destination='bigquery', dataset_name="akela_test_slack_backup"
+        pipeline_name="slack", destination='bigquery', dataset_name="akela_slack_backup_2"
     )
 
     source = slack_source(
