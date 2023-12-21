@@ -7,6 +7,7 @@ import dlt
 from dlt.common.typing import TAnyDateTime, TDataItem
 from dlt.sources import DltResource
 from pendulum import DateTime
+import time
 
 from .helpers import SlackAPI, ensure_dt_type
 from .settings import (
@@ -117,21 +118,20 @@ def slack_source(
         ):
             yield page_data
 
-    def get_replies_resource(
-            channel_data: Dict[str, Any],
-            message_ts: str,
-    ):
-        params = {
-            "channel": channel_data["id"],
-            "ts": message_ts
-        }
+    def get_thread_replies(messages, channel_data):
 
-        for page_data in api.get_pages(
-            resource="conversations.replies",
-            response_path="$.messages[*]",
-            params=params,
-        ):
-            yield page_data
+        for message in messages:
+            if message.get("thread_ts", None):
+                params = {"channel": channel_data["id"],
+                  "ts": message["thread_ts"].timestamp()}
+
+                for page_data in api.get_pages(
+                    resource="conversations.replies",
+                    response_path="$.messages[*]",
+                    params=params,
+
+                ):
+                    yield page_data[1:]
 
     if selected_channels:
         fetch_channels = [
@@ -151,22 +151,16 @@ def slack_source(
     for channel in fetch_channels:
         channel_name = channel["name"]
         table_name = partial(table_name_func, channel_name)
-        # messages_resource = get_messages_resource(channel)
-        # print(messages_resource)
-        # for message in next(messages_resource):
-        #     print(message)
-        #     if message["thread_ts"]:
-        #         thread_replies = (get_replies_resource(channel, message["thread_ts"]))
-        #         print(next(thread_replies))
-        #         asdf
                 
-        yield dlt.resource(
+        messages_resource =  dlt.resource(
             get_messages_resource,
             name=channel_name,
             table_name=table_name,
             primary_key=("channel", "ts"),
             write_disposition="append",
         )(channel)
+
+        yield from (messages_resource, messages_resource | dlt.transformer(get_thread_replies, name=channel_name+"_replies", table_name=partial(table_name_func,channel_name+"_replies"), primary_key=("thread_ts", "ts"), write_disposition="append")(channel))
 
     # It will not work in the pipeline or tests because it is a paid feature, it raises a
     # raise an error when it is not a paying account.
