@@ -157,10 +157,10 @@ def slack_source(
             name=channel_name,
             table_name=table_name,
             primary_key=("channel", "ts"),
-            write_disposition="append",
+            write_disposition="append", # replace?
         )(channel)
 
-        yield from (messages_resource, messages_resource | dlt.transformer(get_thread_replies, name=channel_name+"_replies", table_name=partial(table_name_func,channel_name+"_replies"), primary_key=("thread_ts", "ts"), write_disposition="append")(channel))
+        yield from (messages_resource, messages_resource | dlt.transformer(get_thread_replies, name=channel_name+"_replies", table_name=partial(table_name_func,channel_name+"_replies"), primary_key=("thread_ts", "ts"), write_disposition="append")(channel)) # merge?
 
     # It will not work in the pipeline or tests because it is a paid feature, it raises a
     # raise an error when it is not a paying account.
