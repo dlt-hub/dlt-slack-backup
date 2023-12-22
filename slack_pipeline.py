@@ -11,12 +11,13 @@ def load_all_resources(start_date) -> None:
     """Load all resources from slack without any selection of channels."""
 
     pipeline = dlt.pipeline(
-        pipeline_name="slack", destination='bigquery', dataset_name="akela_slack_backup_2"
+        pipeline_name="slack", destination='bigquery', dataset_name="slack_community_backup"
     )
 
     source = slack_source(
         page_size=1000, start_date=start_date,
     )
+    source.root_key = True
 
     # Uncomment the following line to load only the access_logs resource. It is not selectes
     # by default because it is a resource just available on paid accounts.
